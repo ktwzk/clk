@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html><head>
+    <title>clk</title>
+
+<link href="//fonts.googleapis.com/css?family=Anonymous+Pro&amp;subset=cyrillic" rel="stylesheet">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"><style>
+    body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        font: 50px "Anonymous Pro";
+        text-align: center;
+    }
+    #question-box {
+        margin-top: 5%;
+    }
+    input {
+        background-color: black;
+        color: white;
+        font: 50px "Anonymous Pro";
+        border: none;
+        text-align: center;
+        outline: none;
+    }
+    .hidden {
+        opacity: 0;
+    }
+    #clock-box {
+        margin-top: 5%;
+        font: 100px "Anonymous Pro";
+    }
+</style>
+
+<script>
+    var questionBox, hourInput, minuteInput, clockBox,
+        startOfToday, wokeTime;
+
+    function getlocalTimeInSeconds() {
+        return (Date.now()/1000) - ((new Date()).getTimezoneOffset() * 60);
+    }
+
+    window.addEventListener('load', function () {
+        questionBox = document.getElementById('question-box');
+        hourInput = document.getElementById('hour-input');
+        minuteInput = document.getElementById('minute-input');
+        clockBox = document.getElementById('clock-box');
+
+        hourInput.focus();
+
+        hourInput.addEventListener('keyup', function (event) {
+            if (event.which == 13 || hourInput.value.length == 2) {
+                minuteInput.focus();
+            }
+        });
+
+        minuteInput.addEventListener('keyup', function (event) {
+            if (event.which == 13 || minuteInput.value.length == 2) {
+                startClock();
+            }
+        });
+        minuteInput.addEventListener('blur', function (event) {
+            startClock();
+        });
+    });
+
+    function startClock() {
+        var wokeHours = parseInt(hourInput.value) || 0,
+            wokeMinutes = parseInt(minuteInput.value) || 0,
+            nowSeconds = getlocalTimeInSeconds();
+
+        questionBox.style.display = 'none';
+
+        startOfToday = Math.floor(nowSeconds / (60 * 60 * 24)) * (60 * 60 * 24);
+
+        wokeTime = startOfToday + (((wokeHours * 60) + wokeMinutes) * 60);
+
+        update();
+    }
+
+    function update() {
+        var diff = getlocalTimeInSeconds() - wokeTime,
+            hours = Math.floor( diff / (60 * 60) ),
+            minutes = Math.floor( (diff % (60 * 60)) / 60 ),
+            seconds = Math.floor(diff % 60);
+
+        var backdiff = Math.floor(getlocalTimeInSeconds() / (60 * 60 * 24)) * (60 * 60 * 24) + ((60 * 60 * 24)) - getlocalTimeInSeconds(),
+            bhours = Math.floor( backdiff / (60 * 60) ),
+            bminutes = Math.floor( (backdiff % (60 * 60)) / 60 ),
+            bseconds = Math.floor(backdiff % 60);
+
+        clockBox.innerHTML = '<font size="30px">time left before tommorow</font><br>' + ('0' + bhours).slice(-2) + ' : ' + ('0' + bminutes).slice(-2) + ' : ' + ('0' + bseconds).slice(-2);  
+        clockBox.innerHTML += '<br><br><font size="30px">u r making shit</font><br>' + ('0' + hours).slice(-2) + ' : ' + ('0' + minutes).slice(-2) + ' : ' + ('0' + seconds).slice(-2);
+        clockBox.innerHTML += '<br><font size="30px">it\'s ' + Math.floor(diff/(16*60*60)*100) + ' % of 16h</font>';
+        setTimeout(update, 500);
+    }
+</script>
+
+</head><body><div id="question-box">
+    <div>what time did you wake up?</div>
+    <br>
+    <div>
+        <input size="2" id="hour-input"> : <input size="2" id="minute-input">
+        <div class="hidden"><input></div>
+    </div>
+</div>
+<div id="clock-box"></div>
+</body></html>
