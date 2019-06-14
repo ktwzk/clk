@@ -91,7 +91,8 @@
         clockBox.innerHTML = '<font size="30px">time left before tommorow</font><br>' + ('0' + bhours).slice(-2) + ' : ' + ('0' + bminutes).slice(-2) + ' : ' + ('0' + bseconds).slice(-2);  
         clockBox.innerHTML += '<br><br><font size="30px">u r making shit</font><br>' + ('0' + hours).slice(-2) + ' : ' + ('0' + minutes).slice(-2) + ' : ' + ('0' + seconds).slice(-2);
         clockBox.innerHTML += '<br><font size="30px">it\'s ' + Math.floor(diff/(16*60*60)*100) + ' % of 16h</font>';
-        setTimeout(update, 500);
+        document.title = ('0' + bhours).slice(-2) + ':' + ('0' + bminutes).slice(-2) + ':' + ('0' + bseconds).slice(-2);  
+      setTimeout(update, 500);
     }
 </script>
 
